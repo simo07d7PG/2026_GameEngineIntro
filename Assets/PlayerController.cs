@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     private Vector2 moveInput;
@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float jumpModifier = 10.0f;
     private Rigidbody2D rb;
     private Animator ani;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -19,13 +20,11 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = value.Get<Vector2>();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void OnJump(InputValue value)
     {
         if(value.isPressed)
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpModifier);
     }
-    // Update is called once per frame
     void Update()
     {
         if (moveInput.x > 0)
@@ -44,5 +43,10 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.Translate(Vector3.right * moveInput.x * Time.deltaTime * moveSpeed);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        SceneManager.LoadScene("PlayScene_" + collision.name);
     }
 }
